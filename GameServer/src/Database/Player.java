@@ -1,20 +1,18 @@
-package model;
+package Database;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class User {
+@Table(name="Player")
+public class Player {
 	
 	@Id
-	@GeneratedValue
 	int id;
-	@Column
-	String name;
 	
-	
+	public String name;
+	public String points;
 	public int getId() {
 		return id;
 	}
@@ -27,5 +25,13 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
+	public String getPoints() {
+		return points;
+	}
+	public void setPoints(String points) {
+		this.points = points;
+	}
 	
+	
+
 }

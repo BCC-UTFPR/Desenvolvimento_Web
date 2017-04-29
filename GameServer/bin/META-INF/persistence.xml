@@ -7,7 +7,7 @@
     <persistence-unit name="gameserver">
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
 
-        <class>model.User</class> 
+        <class>Database.Player</class> 
         <properties>
             <property name="hibernate.cache.provider_class" value="org.hibernate.cache.SingletonEhCacheProvider" />
 
