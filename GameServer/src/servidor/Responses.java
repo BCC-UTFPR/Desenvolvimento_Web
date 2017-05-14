@@ -1,24 +1,20 @@
-package Servidor;
+package servidor;
 
 import java.io.IOException;
 
-public class ResponseHandler {
+import com.google.gson.JsonObject;
+
+public class Responses {
 	String localHost;
 	
-	public ResponseHandler(String localHost) {
+	public Responses(String localHost) {
 		this.localHost = localHost;
 	}
 	
-    public byte[] responseJSON_Success() throws IOException {
+    public byte[] responseJSON_Success(JsonObject response) throws IOException {
         String responseHeader = "HTTP/1.1 200 OK\n"
-                + "<!DOCTYPE HTML PUBLIC \"-//IETF//DTD HTML 2.0//EN\"><html><head><title>"
-                + "JSON Worked!"
-        		+ "</title></head><body><h1>Success</h1><p>A JSON File you sent "
-                + " was received by the server.</p><hr><address>"
-                + "Fronchetti Server [Alpha] / "
-                + localHost
-                + "</address></body></html>";
-        
+        		+ "\n"
+                + response;
         return responseHeader.getBytes();
     }
     
@@ -30,7 +26,7 @@ public class ResponseHandler {
         		+ "</title></head><body><h1>Not Found</h1><p>The requested URL "
                 + resource
                 + " was not found on this Servidor.</p><hr><address>"
-                + "Fronchetti Server [Alpha] / "
+                + "Game Server [Primeira entrega] | "
                 + localHost
                 + "</address></body></html>";
         return responseHeader.getBytes();
@@ -44,11 +40,10 @@ public class ResponseHandler {
                 + "401 Not Authorized"
         		+ "</title></head><body><h1>Not Authorized</h1><p>The requested URL "
                 + " was under security constraint.</p><hr><address>"
-                + "Fronchetti Server [Alpha] / "
+                + "Game Server [Primeira entrega] | "
                 + localHost
                 + "</address></body></html>";
-
-        return responseHeader.getBytes();
+        return responseHeader.getBytes();        
     }
 
     public byte[] response501_NotImplemented() throws IOException {
@@ -58,7 +53,7 @@ public class ResponseHandler {
                 + "501 Not implemented"
         		+ "</title></head><body><h1>Not implemented</h1><p>The requested URL "
                 +" was under security constraint.</p><hr><address>"
-                + "Fronchetti Server [Alpha] / "
+                + "Game Server [Primeira entrega] | "
                 + localHost
                 +"</address></body></html>";
         return responseHeader.getBytes();
@@ -71,7 +66,7 @@ public class ResponseHandler {
         		+ "400 Bad Request"
         		+ "</title></head><body><h1>Bad Request</h1><p>The requested URL "
         		+" was under security constraint.</p><hr><address>"
-        		+ "Fronchetti Server [Alpha] / "
+        		+ "Game Server [Primeira entrega] | "
         		+ localHost
         		+"</address></body></html>";
         return responseHeader.getBytes();
