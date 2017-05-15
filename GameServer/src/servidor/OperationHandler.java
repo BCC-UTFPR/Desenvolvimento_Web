@@ -24,12 +24,16 @@ public class OperationHandler {
 		JsonObject request = element.getAsJsonObject();
 		String operation = request.get("op").getAsString();
 		OperationHandler.log("[Operação] Nova operação requisitada! Identificador: " + operation);
-		
+		Boolean action;
 		switch(operation) {
 		case "add-trophy":
-			database.addTrophy(request);
-			OperationHandler.log("[Operação] Troféu adicionado com sucesso!");
-			return OK();
+			action = database.addTrophy(request);
+			if(action){
+				OperationHandler.log("[Operação] Troféu adicionado com sucesso!");
+				return OK();	
+			}else{
+				OperationHandler.log("[Operação add-trophy] não realizada");
+			}
 		case "get-trophy":
 			OperationHandler.log("[Operação] Buscando troféu com sucesso");
 			JsonObject data = database.getTrophy(request);
@@ -39,19 +43,33 @@ public class OperationHandler {
 			JsonArray data1 = database.listTrophy(request);
 			return OK_withDataArray(data1);
 		case "save-state":
-			OperationHandler.log("[Operação] Checkpoint adicionado com sucesso");
-			database.saveState(request);
-			return OK();
+			action = database.saveState(request);
+			if(action){
+				OperationHandler.log("[Operação] Checkpoint adicionado com sucesso");
+				return OK();
+			}else{
+				OperationHandler.log("[Operação save-state] não realizada");
+			}
 		case "load-state":
 			OperationHandler.log("[Operação] Checkpoing carregado com sucesso");
 			JsonObject data2 = database.loadState(request);
 			return OK_withData(data2);
+		case "save-media":
+			action = database.saveMedia(request);
+			if(action){
+				OperationHandler.log("[Operação] Imagem salva com sucesso");
+				return OK();
+			}else{
+				OperationHandler.log("[Operação save-media] não realizada");
+			}
+			
 		default:
 			return Error("not_implemented");
 		}	
 	}
 	
 	private JsonObject OK_withDataArray(JsonArray data1) {
+		//System.out.println(data1);
 		JsonObject innerObject = new JsonObject();
 		innerObject.addProperty("response","ok");
 		innerObject.addProperty("data",data1.toString());

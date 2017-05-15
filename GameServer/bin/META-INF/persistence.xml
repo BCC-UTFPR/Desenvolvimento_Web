@@ -6,6 +6,7 @@
 <provider>org.hibernate.ejb.HibernatePersistence</provider>
 <class>database.DataTrophy</class>
 <class>database.DataSave</class>
+<class>database.DataMedia</class>
 <properties>
 <property name="hibernate.dialect"
     value="org.hibernate.dialect.MySQLDialect" />

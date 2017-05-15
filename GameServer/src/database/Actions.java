@@ -12,8 +12,9 @@ public class Actions {
 	EntityManager manager = factory.createEntityManager();
 	DataTrophy dataTrophy = new DataTrophy();
 	DataSave dataSave = new DataSave();
+	DataMedia dataMedia = new DataMedia();
 
-	public void addTrophy(JsonObject json) {
+	public Boolean addTrophy(JsonObject json) {
 		JsonObject jsonData = json.getAsJsonObject("data");
 		dataTrophy.setName(jsonData.get("name").getAsString());
 		dataTrophy.setXp(jsonData.get("xp").getAsInt());
@@ -22,6 +23,7 @@ public class Actions {
 		manager.getTransaction().begin();
 		manager.persist(dataTrophy);
 		manager.getTransaction().commit();
+		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -48,7 +50,7 @@ public class Actions {
 		manager.getTransaction().begin();
 		List<DataTrophy> queryList = (List<DataTrophy>) manager.createQuery("from DataTrophy",DataTrophy.class).getResultList();
 		//System.out.println(queryList);
-		
+		//List<JsonElement> lista = new ArrayList<JsonElement>();
 		for(DataTrophy dataTrophy: queryList){
 			//saidaFinal.add(resultado);
 			//System.out.println(dataTrophy.getXp());
@@ -57,18 +59,25 @@ public class Actions {
 			resultado.addProperty("title", dataTrophy.getTitle());
 			resultado.addProperty("description", dataTrophy.getDescription());
 			saidaFinal.add(resultado);
+			//System.out.println(saidaFinal);
+			//lista.add(resultado);
+			
+			//System.out.println(resultado);
 		}
+		//System.out.println(lista);
+		//System.out.println(saidaFinal);
 		return saidaFinal;
 		
 	}
 	
-	public void saveState(JsonObject json) {
+	public Boolean saveState(JsonObject json) {
 		JsonObject jsonData = json.getAsJsonObject("data");
 		dataSave.setPosX(jsonData.get("x").getAsInt());
 		dataSave.setPosY(jsonData.get("y").getAsInt());
 		manager.getTransaction().begin();
 		manager.persist(dataSave);
 		manager.getTransaction().commit();
+		return true;
 	}
 	
 	public JsonObject loadState (JsonObject json) {
@@ -82,7 +91,15 @@ public class Actions {
 		return saida;
 	}
 	
-	
-	
+	//Salvei como string, depois só modificar para o formato no hibernate
+	public Boolean saveMedia(JsonObject json){
+		JsonObject jsonDataMedia = json.getAsJsonObject("data");
+		dataMedia.setMimeType(jsonDataMedia.get("mimeType").getAsString());
+		dataMedia.setSrc(jsonDataMedia.get("src").getAsString());
+		manager.getTransaction().begin();
+		manager.persist(dataMedia);
+		manager.getTransaction().commit();
+		return true;
+	}
 	
   }
