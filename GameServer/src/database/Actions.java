@@ -4,6 +4,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -14,7 +16,7 @@ public class Actions {
 	DataSave dataSave = new DataSave();
 	DataMedia dataMedia = new DataMedia();
 
-	public Boolean addTrophy(JsonObject json) {
+	public void addTrophy(JsonObject json) {
 		JsonObject jsonData = json.getAsJsonObject("data");
 		dataTrophy.setName(jsonData.get("name").getAsString());
 		dataTrophy.setXp(jsonData.get("xp").getAsInt());
@@ -23,7 +25,6 @@ public class Actions {
 		manager.getTransaction().begin();
 		manager.persist(dataTrophy);
 		manager.getTransaction().commit();
-		return true;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -45,39 +46,36 @@ public class Actions {
 	
 	//tem que ver pq está imprimindo duas vezes o último
 	public JsonArray listTrophy (JsonObject json) {
-		JsonObject resultado = new JsonObject();
+		
 		JsonArray saidaFinal = new JsonArray();
 		manager.getTransaction().begin();
 		List<DataTrophy> queryList = (List<DataTrophy>) manager.createQuery("from DataTrophy",DataTrophy.class).getResultList();
-		//System.out.println(queryList);
-		//List<JsonElement> lista = new ArrayList<JsonElement>();
 		for(DataTrophy dataTrophy: queryList){
-			//saidaFinal.add(resultado);
-			//System.out.println(dataTrophy.getXp());
+			JsonObject resultado = new JsonObject();
 			resultado.addProperty("name", dataTrophy.getName());
 			resultado.addProperty("xp", dataTrophy.getXp());
 			resultado.addProperty("title", dataTrophy.getTitle());
 			resultado.addProperty("description", dataTrophy.getDescription());
 			saidaFinal.add(resultado);
-			//System.out.println(saidaFinal);
-			//lista.add(resultado);
-			
-			//System.out.println(resultado);
 		}
-		//System.out.println(lista);
-		//System.out.println(saidaFinal);
 		return saidaFinal;
 		
 	}
 	
-	public Boolean saveState(JsonObject json) {
+	public void clearTrophy(JsonObject json){
+		manager.getTransaction().begin();
+		manager.createQuery("delete from DataTrophy").executeUpdate();
+		manager.getTransaction().commit();
+		
+	}
+	
+	public void saveState(JsonObject json) {
 		JsonObject jsonData = json.getAsJsonObject("data");
 		dataSave.setPosX(jsonData.get("x").getAsInt());
 		dataSave.setPosY(jsonData.get("y").getAsInt());
 		manager.getTransaction().begin();
 		manager.persist(dataSave);
 		manager.getTransaction().commit();
-		return true;
 	}
 	
 	public JsonObject loadState (JsonObject json) {
@@ -92,14 +90,26 @@ public class Actions {
 	}
 	
 	//Salvei como string, depois só modificar para o formato no hibernate
-	public Boolean saveMedia(JsonObject json){
+	public void saveMedia(JsonObject json){
 		JsonObject jsonDataMedia = json.getAsJsonObject("data");
 		dataMedia.setMimeType(jsonDataMedia.get("mimeType").getAsString());
 		dataMedia.setSrc(jsonDataMedia.get("src").getAsString());
 		manager.getTransaction().begin();
 		manager.persist(dataMedia);
 		manager.getTransaction().commit();
-		return true;
+	}
+	
+	public JsonArray listMedia (JsonObject json){
+		JsonArray resultFinal = new JsonArray();
+		manager.getTransaction().begin();
+		List<DataMedia> query = (List<DataMedia>) manager.createQuery("from DataMedia",DataMedia.class).getResultList();
+		for(DataMedia dataMedia: query){
+			JsonObject result = new JsonObject();
+			result.addProperty("mimeType", dataMedia.getMimeType());
+			result.addProperty("src", dataMedia.getSrc());
+			resultFinal.add(result);
+		}
+		return resultFinal;
 	}
 	
   }
